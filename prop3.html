@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.3 - cut off equal line from greater line</h1>
+<p>To cut off from the greater of two given unequal straight lines a straight line equal to the less.<br><br>
+Type your answer and press Enter.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.3 chatbot!
+   
+We are given two straight lines AB (greater) and BC (lesser), with A an endpoint of AB. Agreed? (yes/no):`,
+    hint: `Assume AB is longer than BC, and we will work from endpoint A on AB.` },
+  { q: `Our goal is to cut off from AB a segment AE such that AE equals BC. Does that make sense? (yes/no):`,
+    hint: `We want to produce E on AB with AE the same length as BC.` },
+  { q: `Using Proposition I.2, can we place at point A a straight line AD equal to BC? (yes/no):`,
+    hint: `By I.2, from a given point we can draw a straight line equal to a given straight line.` },
+  { q: `So do we have AD = BC? (yes/no):`,
+    hint: `That is exactly what I.2 guarantees: AD is equal to BC.` },
+  { q: `Next, with center A and radius AD, can we draw a circle? (yes/no):`,
+    hint: `This is a standard Euclidean construction: circle (center=A, radius=AD).` },
+  { q: `Does this circle intersect the line AB at some point E? (yes/no): `,
+    hint: `Since A lies on AB, the circle will meet AB again at a point E (on the extension if needed).` },
+  { q: `Is AE equal to AD (radii of the same circle)? (yes/no):`,
+    hint: `All radii of the same circle are equal; AE and AD are radii of the same circle.` },
+  { q: `Given AD = BC and AE = AD, can we conclude AE = BC? (yes/no):`,
+    hint: `Things equal to the same thing are equal to one another (Common Notion 1).` }
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Therefore, E lies on AB and AE equals BC. Congratulations, we have cut off from the greater AB a straight line equal to the less BC.
+Q.E.F. (Quod Erat Faciendum - which was to be done)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

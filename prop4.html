@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.4 - prove triangles equal by two sides and included angle (SAS)</h1>
+<p>If two triangles have two sides equal to two sides respectively, and have the angles contained by the equal straight lines equal, then they also have the base equal to the base, the triangle equals the triangle, and the remaining angles equal the remaining angles respectively, namely those opposite the equal sides.<br><br>
+Type your answer and press Enter.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.4 chatbot!
+Goal: From the Side-Angle-Side (SAS) conditions, conclude triangles are congruent and their bases and remaining angles are equal.
+   
+We are given two triangles ABC and DEF. (yes/no):`,
+    hint: `Think of ΔABC and ΔDEF as candidates for congruence.` },
+  { q: `The side AB equals the side DE. (yes/no):`,
+    hint: `First corresponding side pair is equal: AB = DE.` },
+  { q: `The side AC equals the side DF. (yes/no)`,
+    hint: `Second corresponding side pair is equal: AC = DF.` },
+  { q: `The angle at A equals the angle at D, and it is the angle included between the equal sides. (yes/no):`,
+    hint: `Included means it's formed by AB & AC in ΔABC and by DE & DF in ΔDEF.` },
+  { q: `Imagine placing point A onto point D. Reasonable? (yes/no):`,
+    hint: `We can mentally move (superpose) one figure onto another for a proof by fit.` },
+  { q: `With AB = DE, can we align side AB onto DE so that B lands along DE? (yes/no):`,
+    hint: `Because lengths are equal, the endpoint B can coincide with E.` },
+  { q: `Since ∠A = ∠D and AC = DF, can we align AC onto DF so that C lands along DF? (yes/no):`,
+    hint: `Equal included angles ensure the arms lie along each other; equal lengths match endpoints.` },
+  { q: `Under this fit, do B and E coincide and C and F coincide? (yes/no):`,
+    hint: `Equal side pairs from the same vertex with equal included angle force the endpoints to meet.` },
+  { q: `If B↔E and C↔F, are the bases BC and EF equal? (yes/no):`,
+    hint: `Corresponding endpoints matched imply BC = EF.` },
+  { q: `Do the triangles ABC and DEF coincide in all parts (are congruent)? (yes/no):`,
+    hint: `Side, included angle, and side matching yields full coincidence (SAS).` },
+  { q: `Therefore, are the remaining corresponding angles equal: ∠ABC = ∠DEF and ∠ACB = ∠DFE? (yes/no):`,
+    hint: `Matching vertices imply remaining angles are equal as well.` }
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Therefore, from AB = DE, AC = DF, and ∠A = ∠D (included), it follows that BC = EF, ΔABC ≅ ΔDEF, and the remaining angles are equal respectively.
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 5</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.5 - prove base and exterior angles equal in isosceles triangle</h1>
+<p>In isosceles triangles the angles at the base equal one another, and, if the equal straight lines are produced further, then the angles under the base equal one another.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.5 chatbot!
+   
+We are given an isosceles triangle ABC, with AB equal to AC. Do you agree? (yes/no):`,
+    hint: `An isosceles triangle has two equal sides; here AB = AC.` },
+  { q: `Next, produce the equal sides AB and AC in straight lines, making BD and CE. Possible? (yes/no):`,
+    hint: `Postulate 2 allows any straight line to be produced further in a straight line.` },
+  { q: `Our goal is to prove that ∠ABC = ∠ACB (the base angles), and ∠CBD = ∠BCE (the external angles). Does that make sense? (yes/no):`,
+    hint: `These are the equal angles we want to demonstrate.` },
+  { q: `Let us take an arbitrary point F on the line BD. Do you see that this is possible? (yes/no):`,
+    hint: `Any point can be chosen on a straight line.` },
+  { q: `Now, cut off AG from AE such that AG = AF. Is this construction possible? (yes/no):`,
+    hint: `Proposition I.3 allows cutting off from a greater line a segment equal to a lesser.` },
+  { q: `Join the lines FC and GB. Can we do that? (yes/no):`,
+    hint: `Postulate 1 allows a straight line to be drawn from any point to any point.` },
+  { q: `Since AF = AG and AB = AC, can we say that △AFC and △AGB have two pairs of equal sides and a common angle at A? (yes/no):`,
+    hint: `Yes, they share ∠FAG, so two sides and the included angle are equal.` },
+  { q: `From Proposition I.4, do we then have △AFC equal to △AGB? (yes/no):`,
+    hint: `If two sides and the included angle are equal, then the triangles are equal.` },
+  { q: `Therefore, is FC = GB, and ∠ACF = ∠ABG? (yes/no):`,
+    hint: `Corresponding sides and angles of equal triangles are equal.` },
+  { q: `Now, since AF = AG and AB = AC, can we conclude BF = CG? (yes/no):`,
+    hint: `Subtract equals from equals, the remainders are equal (Common Notion 3).` },
+  { q: `Also, since FC = GB and BF = CG, with base BC common, can we say △BFC and △CGB are equal? (yes/no):`,
+    hint: `Two sides and the included angle are equal, with BC as the common base.` },
+  { q: `Then, are ∠FBC and ∠GCB equal? (yes/no):`,
+    hint: `Equal triangles have equal opposite angles.` },
+  { q: `Now recall: we showed ∠ABG = ∠ACF, and within them ∠CBG = ∠BCF. So, are the remaining angles ABC and ACB equal? (yes/no):`,
+    hint: `Subtract equals from equals; the remainders are equal (Common Notion 3).` },
+  { q: `Finally, did we also prove that ∠FBC = ∠GCB, the external angles under the base? (yes/no):`,
+    hint: `Yes, these were shown equal by △BFC = △CGB.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Therefore, in isosceles triangles, the base angles are equal, and the angles under the base are also equal. 
+    Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

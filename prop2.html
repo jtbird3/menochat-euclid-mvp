@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+    #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.2 - place equal line from point</h1>
+<p>To place a straight line equal to a given straight line with one end at a given point.<br><br>
+
+Type your answer and press Enter.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.2 chatbot.
+
+We are given a point A, and a straight line BC. Do you agree? (yes/no):`,
+    hint: `Okay — try again when ready.` },
+  { q: `Our goal is to draw from point A a straight line equal in length to BC. Does that make sense? (yes/no):`,
+    hint: `Okay — try again when ready.` },
+  { q: `First, join point A to point B with a straight line. Can we do that? (yes/no):`,
+    hint: `Postulate 1 allows a straight line to be drawn from any point to any point.` },
+  { q: `On the line AB, construct an equilateral triangle ABD. Possible? (yes/no):`,
+    hint: `Proposition I.1: an equilateral triangle can be constructed on any straight line.` },
+  { q: `Extend the sides DA and DB beyond A and B (produce them). Is this allowed? (yes/no):`,
+    hint: `Postulate 2: a finite straight line can be produced continuously in a straight line.` },
+  { q: `With center B and radius BC, draw a circle that meets the produced line BD at E. Can we do that? (yes/no):`,
+    hint: `Postulate 3: a circle can be drawn with any center and radius.` },
+  { q: `Now, with center D and radius DE, draw another circle that meets the produced line DA at F. Can we do that? (yes/no):`,
+    hint: `Postulate 3 again: circle with center D and radius DE.` },
+  { q: `Is DF equal to DE? (yes/no):`,
+    hint: `Both DF and DE are radii of the circle centered at D.` },
+  { q: `From DF = DE, can we say DA + AF = DB + BE? (yes/no):`,
+    hint: `F lies on the extension of DA beyond A, and E lies on the extension of DB beyond B.` },
+  { q: `From the equilateral triangle ABD, is DA equal to DB? (yes/no):`,
+    hint: `All sides of an equilateral triangle are equal.`, },
+  { q: `If DA + AF = DB + BE and DA = DB, do we conclude AF = BE? (yes/no):`,
+    hint: `Subtract equals from equals and the remainders are equal (Common Notion 3).` },
+  { q: `And is BE equal to BC? (yes/no):`,
+    hint: `E is on the circle centered at B with radius BC, so BE equals BC.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Therefore AF = BC. Congratulations! We have placed at A a straight line equal to the given line BC. 
+Q.E.F. (Quod Erat Faciendum - which was to be done)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>
+

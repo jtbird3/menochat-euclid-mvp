@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+    #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages vertically */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+  }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.1 - equilateral triangle</h1>
+<p>To construct an equilateral triangle on a given finite straight line.<br><br>
+
+Type your answer and press Enter.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.1 chatbot.
+
+You are given a finite straight line, AB. Do you agree? (yes/no):`,
+    hint: `A finite straight line is a line with two endpoints.` },
+  { q: `The goal is to construct an equilateral triangle on this line AB. Does that make sense? (yes/no):`,
+    hint: `An equilateral triangle has all three sides of equal length.` },
+  { q: `First, draw a circle with center A and radius AB. Possible? (yes/no):`,
+    hint: `Postulate 3 of Euclid's Elements allows us to draw a circle with any center and radius.` },
+  { q: `Next, draw another circle with center B and radius BC. Possible? (yes/no):`,
+    hint: `Again, Postulate 3 allows this.` },
+  { q: `The two circles intersect at two points. Let's choose one of these intersection points and call it C. Do you see that this point C exists? (yes/no):`,
+    hint: `Since the circles are drawn with radius AB and centered at A and B, they must cross each other.` },
+  { q: `Is the line segment AC equal in length to the line segment AB? (yes/no):`,
+    hint: `AC is a radius of the first circle (centered at A), and AB is also a radius of that same circle.` },
+  { q: `Is the line segment BC equal in length to the line segment AB? (yes/no):`,
+    hint: `BC is a radius of the second circle (centered at B), and AB is the radius of that circle.` },
+  { q: `Since AC = AB and BC = AB, can we conclude that AC = BC = AB? (yes/no)`,
+    hint: `This is based on Common Notion 1: Things which are equal to the same thing are also equal to one another.` }
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`You have constructed an equilateral triangle ABC on the line segment AB.
+Q.E.F. (Quod Erat Faciendum - which was to be done)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>
