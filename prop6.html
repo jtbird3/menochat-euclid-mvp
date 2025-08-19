@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 6</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.6 - prove sides opposite equal angles equal
+</h1>
+<p>If in a triangle two angles equal one another, then the sides opposite the equal angles also equal one another.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.6 chatbot!
+   
+We are given a triangle ABC, with ∠ABC equal to ∠ACB. Do you agree? (yes/no):`,
+    hint: `The triangle has two equal angles at B and C.` },
+  { q: `Our goal is to prove that side AB = side AC. Does that make sense? (yes/no):`,
+    hint: `The sides opposite equal angles should also be equal.` },
+  { q: `Suppose AB is not equal to AC. Then one side must be greater, correct? (yes/no):`,
+    hint: `If two things are not equal, one must be larger.` },
+  { q: `Let's assume AB is greater. Can we cut off a segment DB from AB such that DB = AC? (yes/no):`,
+    hint: `Proposition I.3 allows us to cut off from a greater line a segment equal to a lesser.` },
+  { q: `Now, join the points D and C with a straight line. Can we do that? (yes/no):`,
+    hint: `Postulate 1 allows drawing a straight line from any point to any point.` },
+  { q: `Do we now have DB = AC, and BC is common to both triangles? (yes/no):`,
+    hint: `DB was made equal to AC, and BC is the same side in both triangles.` },
+  { q: `So, in triangles DBC and ACB, do we have two sides equal to two sides, and ∠DBC equal to ∠ACB? (yes/no):`,
+    hint: `Side DB = AC, side BC = CB, and ∠DBC = ∠ACB by the given.` },
+  { q: `From Proposition I.4, does it follow that △DBC = △ACB? (yes/no):`,
+    hint: `Two sides and the included angle equal implies the triangles are equal.` },
+  { q: `But is △DBC smaller than △ACB? (yes/no):`,
+    hint: `Triangle DBC lies inside triangle ACB, so it cannot be equal.` },
+  { q: `Is this a contradiction? (yes/no):`,
+    hint: `Common Notion 5 says the whole is greater than the part.` },
+  { q: `Therefore, is our assumption wrong that AB ≠ AC? (yes/no):`,
+    hint: `A contradiction means the assumption must be false.` },
+  { q: `Thus, must AB = AC? (yes/no):`,
+    hint: `If AB is not unequal to AC, then AB = AC.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! We have shown that if two angles of a triangle are equal, then the opposite sides are also equal. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

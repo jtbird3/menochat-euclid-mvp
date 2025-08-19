@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 15</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.15 - prove vertical angles equal when lines intersect
+</h1>
+<p>If two straight lines cut one another, then they make the vertical angles equal to one another.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.15 chatbot!
+   
+We are given two straight lines AB and CD that cut one another at point E. Do you agree? (yes/no):`,
+    hint: `The lines cross at E, forming four angles around the point.` },
+  { q: `Our goal is to prove that ∠AEC = ∠DEB and ∠CEB = ∠AED. Does that make sense? (yes/no):`,
+    hint: `These are called vertically opposite angles.` },
+  { q: `Since AE stands on line CD, do the angles ∠CEA and ∠AED add up to two right angles? (yes/no):`,
+    hint: `Proposition I.13: a straight line standing on another makes adjacent angles equal to two right angles.` },
+  { q: `Likewise, since DE stands on line AB, do the angles ∠AED and ∠DEB add up to two right angles? (yes/no):`,
+    hint: `Again by I.13, a straight line on another makes two right angles.` },
+  { q: `If ∠CEA + ∠AED = two right angles, and ∠AED + ∠DEB = two right angles, are these two sums equal? (yes/no):`,
+    hint: `Both equal the same thing (two right angles).` },
+  { q: `From this, if we subtract ∠AED from both sums, do we get ∠CEA = ∠DEB? (yes/no):`,
+    hint: `Common Notion 3: if equals are subtracted from equals, the remainders are equal.` },
+  { q: `By the same reasoning, can we also conclude that ∠CEB = ∠AED? (yes/no):`,
+    hint: `Repeat the same steps with the other pair of vertical angles.` },
+  { q: `Therefore, are vertically opposite angles equal whenever two straight lines cut one another? (yes/no):`,
+    hint: `Yes, this is exactly what we set out to prove.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! We have shown that when two straight lines cut one another, the vertically opposite angles are equal. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)
+
+Corollary: From this it is clear that, if two straight lines cut each other, the angles at the point of intersection are equal to four right angles.`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

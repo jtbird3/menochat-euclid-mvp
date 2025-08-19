@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 12</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.12 - draw perpendicular from point off line
+</h1>
+<p>To draw a straight line perpendicular to a given infinite straight line from a given point not on it.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.12 chatbot!
+   
+We are given an infinite straight line AB, and a point C not on AB. Do you agree? (yes/no):`,
+    hint: `The problem says AB is the given infinite straight line, and C is a point outside it.` },
+  { q: `Our goal is to draw from point C a line perpendicular to AB. Does that make sense? (yes/no):`,
+    hint: `A perpendicular makes right angles with the line it meets.` },
+  { q: `First, let us pick a point D on the opposite side of AB from C. Is this possible? (yes/no):`,
+    hint: `Any point can be chosen on either side of a straight line.` },
+  { q: `Next, with center C and radius CD, can we draw a circle through D? (yes/no):`,
+    hint: `By Postulate 3, we can draw a circle with any center and radius.` },
+  { q: `This circle cuts the line AB at two points, call them E and G. Do you see that? (yes/no):`,
+    hint: `Since AB crosses the circle, it will meet it in two points.` },
+  { q: `Now, can we find the midpoint H of the line EG? (yes/no):`,
+    hint: `Proposition I.10 shows how to bisect a straight line.` },
+  { q: `Join the lines CE, CG, and CH. Can we do this? (yes/no):`,
+    hint: `Postulate 1 allows drawing straight lines between any two points.` },
+  { q: `Since GH = HE and HC is common, do the triangles GHC and EHC have equal sides? (yes/no):`,
+    hint: `Each has two sides equal (GH = HE, HC = HC), and base CG = CE (radii of same circle).` },
+  { q: `From this, are the angles ∠CHG and ∠EHC equal? (yes/no):`,
+    hint: `Proposition I.8 says triangles with equal sides also have equal angles opposite those sides.` },
+  { q: `Since these two equal angles are adjacent, are they right angles? (yes/no):`,
+    hint: `Definition I.10: when a straight line stands on another and makes equal adjacent angles, each is a right angle.` },
+  { q: `Therefore, is CH perpendicular to AB from point C? (yes/no):`,
+    hint: `Yes, this is exactly what it means to draw a perpendicular from a point not on the line.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! You have drawn a straight line perpendicular to AB from the point C. 
+Q.E.F.(Quod Erat Faciendum - which was to be done)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

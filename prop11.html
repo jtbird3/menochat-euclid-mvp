@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 11</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.11 - draw perpendicular from point on line
+</h1>
+<p>To draw a straight line at right angles to a given straight line from a given point on it.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.11 chatbot!
+   
+We are given a straight line AB, and a point C on it. Do you agree? (yes/no):`,
+    hint: `A point on a line means C lies somewhere along AB.` },
+  { q: `Our goal is to draw a straight line from C at right angles to AB. Does that make sense? (yes/no):`,
+    hint: `A right angle is when two equal adjacent angles are formed (I.Def.10).` },
+  { q: `Let us choose a point D on the line AC. Can we do this? (yes/no):`,
+    hint: `Postulate 1 allows taking any point on a line.` },
+  { q: `Now, on the other side of C, cut off CE equal to CD. Possible? (yes/no):`,
+    hint: `By Proposition I.3, we can cut off from a greater line a segment equal to a lesser.` },
+  { q: `Next, construct an equilateral triangle FDE on the line DE. Can we do this? (yes/no):`,
+    hint: `Proposition I.1 allows us to construct an equilateral triangle on any line.` },
+  { q: `Join the line FC. Possible? (yes/no):`,
+    hint: `Postulate 1 allows joining any two points by a straight line.` },
+  { q: `Now, is DC equal to CE? (yes/no):`,
+    hint: `That was how CE was cut off, to be equal to CD.` },
+  { q: `Is CF common to both triangles DCF and ECF? (yes/no):`,
+    hint: `Yes, CF is shared by both.` },
+  { q: `And is DF equal to FE? (yes/no):`,
+    hint: `They are sides of the equilateral triangle FDE.` },
+  { q: `So, do we now have DC + CF = EC + CF, with DF = FE? (yes/no):`,
+    hint: `Yes, this means triangles DCF and ECF are equal by Proposition I.8.` },
+  { q: `Therefore, are ∠DCF and ∠ECF equal? (yes/no):`,
+    hint: `Proposition I.8 states equal triangles have equal angles opposite equal sides.` },
+  { q: `Since ∠DCF and ∠ECF are equal and adjacent, are they each right angles? (yes/no):`,
+    hint: `Definition I.10 says when a straight line on another makes equal adjacent angles, each is a right angle.` },
+  { q: `Thus, is CF drawn at right angles to AB from point C? (yes/no):`,
+    hint: `That is exactly what we required to do.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! You have constructed the perpendicular CF to line AB at point C. 
+Q.E.F. (Quod Erat Faciendum — which was to be done)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>
