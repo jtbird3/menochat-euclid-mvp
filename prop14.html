@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 14</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.14 - prove lines with adjacent angles summing to two right angles are straight
+</h1>
+<p>If with any straight line, and at a point on it, two straight lines not lying on the same side make the sum of the adjacent angles equal to two right angles, then the two straight lines are in a straight line with one another.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.14 chatbot!
+   
+We are given a straight line AB. Do you agree? (yes/no):`,
+    hint: `Think of AB as a flat baseline.` },
+  { q: `At point B on AB, we draw two other lines: BC and BD. They are on opposite sides of AB. Agreed? (yes/no):`,
+    hint: `They rise from B in different directions, not both on the same side of AB.` },
+  { q: `Now, the angles ∠ABC and ∠ABD are next to each other (adjacent). Do you see that? (yes/no):`,
+    hint: `They share the common side AB and touch at point B.` },
+  { q: `The important condition: ∠ABC + ∠ABD = two right angles. Does that make sense? (yes/no):`,
+    hint: `Together, the two adjacent angles are equal to 180°, the same as a “straight angle.”` },
+  { q: `Our goal is to show that CB and BD are in one straight line. Do you agree? (yes/no):`,
+    hint: `That means CB and BD make one continuous straight line through B.` },
+  { q: `Suppose instead BD is not straight with CB. Then imagine another line BE that is straight with CB. Can we suppose that? (yes/no):`,
+    hint: `We test the opposite case to see if a contradiction appears.` },
+  { q: `Since AB stands on the straight line CBE, the angles ∠ABC and ∠ABE together equal two right angles. Do you see that? (yes/no):`,
+    hint: `Proposition I.13 says: a line standing on another line makes adjacent angles equal to two right angles.` },
+  { q: `But we also know ∠ABC + ∠ABD = two right angles. Right? (yes/no):`,
+    hint: `That was the given condition.` },
+  { q: `So does it follow that ∠ABD = ∠ABE? (yes/no):`,
+    hint: `Subtract the common angle ∠ABC from both totals (Common Notion 3).` },
+  { q: `But ∠ABD can't really equal ∠ABE, if one is clearly larger. Correct? (yes/no):`,
+    hint: `ABD opens wider than ABE, so they cannot be equal.` },
+  { q: `So, do we have a contradiction? (yes/no):`,
+    hint: `A smaller angle cannot equal a larger one.` },
+  { q: `Therefore, no line except BD can be straight-on with CB. So BD and CB must form one straight line. Correct? (yes/no):`,
+    hint: `The contradiction shows only BD works.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! We have shown that if two lines at a point make adjacent angles equal to two right angles, then they are straight-on with each other. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

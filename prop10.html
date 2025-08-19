@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Book I - Proposition 1</title>
+  <title>Book I - Proposition 10</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -14,15 +14,15 @@
       margin: auto;
     }
     h1 { font-size: 24px; margin-bottom: 10px; }
-    #chat {
+     #chat {
     border: 1px solid #ccc;
     padding: 10px;
     min-height: 200px;
     white-space: pre-wrap;
-    display: flex;          /* stack messages vertically */
+    display: flex;          /* stack messages */
     flex-direction: column; 
     gap: 10px;              /* space between bot/user lines */
-  }
+    }
     #inputArea {
       margin-top: 10px;
     }
@@ -36,10 +36,9 @@
 </head>
 <body>
 
-<h1>I.1 - equilateral triangle</h1>
-<p>To construct an equilateral triangle on a given finite straight line.<br><br>
-
-Type your answer and press Enter.</p>
+<h1>I.10 - bisect given line
+</h1>
+<p>To bisect a given straight line.</p>
 
 <div id="chat"></div>
 
@@ -49,24 +48,28 @@ Type your answer and press Enter.</p>
 
 <script>
 const steps = [
-  { q: `Welcome to Euclid's Elements I.1 chatbot.
-
-You are given a finite straight line, AB. Do you agree? (yes/no):`,
-    hint: `A finite straight line is a line with two endpoints.` },
-  { q: `The goal is to construct an equilateral triangle on this line AB. Does that make sense? (yes/no):`,
-    hint: `An equilateral triangle has all three sides of equal length.` },
-  { q: `First, draw a circle with center A and radius AB. Possible? (yes/no):`,
-    hint: `Postulate 3 of Euclid's Elements allows us to draw a circle with any center and radius.` },
-  { q: `Next, draw another circle with center B and radius BA. Possible? (yes/no):`,
-    hint: `Again, Postulate 3 allows this.` },
-  { q: `The two circles intersect at two points. Let's choose one of these intersection points and call it C. Do you see that this point C exists? (yes/no):`,
-    hint: `Since the circles are drawn with radius AB and centered at A and B, they must cross each other.` },
-  { q: `Is the line segment AC equal in length to the line segment AB? (yes/no):`,
-    hint: `AC is a radius of the first circle (centered at A), and AB is also a radius of that same circle.` },
-  { q: `Is the line segment BC equal in length to the line segment AB? (yes/no):`,
-    hint: `BC is a radius of the second circle (centered at B), and AB is the radius of that circle.` },
-  { q: `Since AC = AB and BC = AB, can we conclude that AC = BC = AB? (yes/no)`,
-    hint: `This is based on Common Notion 1: Things which are equal to the same thing are also equal to one another.` }
+  { q: `Welcome to Euclid's Elements I.10 chatbot!
+   
+We are given a finite straight line AB. Do you agree? (yes/no):`,
+    hint: `A finite straight line has two endpoints, here A and B.` },
+  { q: `Our goal is to cut AB into two equal parts. Does that make sense? (yes/no):`,
+    hint: `We want to find a point D on AB such that AD = DB.` },
+  { q: `First, construct an equilateral triangle ABC on line AB. Can we do this? (yes/no):`,
+    hint: `By Proposition I.1, an equilateral triangle can be constructed on any straight line.` },
+  { q: `Next, bisect the angle ACB by drawing the line CD. Possible? (yes/no):`,
+    hint: `By Proposition I.9, any angle can be bisected by a straight line from its vertex.` },
+  { q: `Now, consider the two triangles ACD and BCD. Do they share the side CD in common? (yes/no):`,
+    hint: `Both triangles include CD as one of their sides.` },
+  { q: `Also, are AC and CB equal? (yes/no):`,
+    hint: `AC = CB because ABC was constructed as an equilateral triangle.` },
+  { q: `So, do we have AC = CB, CD common, and ∠ACD = ∠BCD? (yes/no):`,
+    hint: `∠ACD = ∠BCD because CD was drawn as the angle bisector of ∠ACB.` },
+  { q: `From Proposition I.4 (SAS), are triangles ACD and BCD equal? (yes/no):`,
+    hint: `Two sides and the included angle are equal, so the triangles are congruent.` },
+  { q: `If the triangles are equal, do we conclude AD = DB? (yes/no):`,
+    hint: `Equal triangles have equal corresponding sides.` },
+  { q: `Therefore, has AB been cut into two equal parts at D? (yes/no):`,
+    hint: `Yes, D is the midpoint of AB.` },
 ];
 
 let currentStep = 0;
@@ -85,11 +88,12 @@ function showStep() {
   if (currentStep < steps.length) {
     addMessage(steps[currentStep].q, 'bot');
   } else {
-    addMessage(`Congratulations! You have constructed an equilateral triangle ABC on the line segment AB.
-Q.E.F. (Quod Erat Faciendum - which was to be done)`, 'bot');
+    addMessage(`Congratulations! We have bisected the straight line AB. 
+Q.E.F. (Quod Erat Faciendum — which was to be done)`, 'bot');
     inputField.disabled = true;
   }
 }
+
 
 function processAnswer(answer) {
   addMessage(answer, 'user');

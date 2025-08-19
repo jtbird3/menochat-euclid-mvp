@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 24</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.24 - prove base greater when included angle greater given two equal sides
+</h1>
+<p>If two triangles have two sides equal to two sides respectively, but have one of the angles contained by the equal straight lines greater than the other, then they also have the base greater than the base.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+{ q: `Welcome to Euclid's Elements I.24 chatbot!
+  
+We are given two triangles, ABC and DEF, such that AB = DE, AC = DF, and ∠A > ∠D. Do you agree? (yes/no):`,
+hint: `Each triangle has two corresponding sides equal, but the included angle in ΔABC is greater than that in ΔDEF.` },
+{ q: `Our goal is to show that if ∠A > ∠D, then base BC is greater than base EF. Does that make sense? (yes/no):`,
+hint: `The larger included angle should produce the larger opposite side.` },
+{ q: `If ∠A > ∠D, can we construct at point D a new angle EDG equal to ∠A? (yes/no):`,
+hint: `By Proposition I.23, we can construct an angle equal to a given angle on a given line.` },
+{ q: `Let DG be drawn equal to AC (or DF). Is this possible? (yes/no):`,
+hint: `Proposition I.3 allows us to set off a line equal to a given line from a point.` },
+{ q: `Now join EG and FG. Can we do this? (yes/no):`,
+hint: `Postulate 1 allows a straight line to be drawn between any two points.` },
+{ q: `Notice AB = DE and AC = DG, with ∠A = ∠EDG. Can we conclude BC = EG? (yes/no):`,
+hint: `Proposition I.4 (SAS) gives equality of triangles when two sides and the included angle are equal.` },
+{ q: `Since DF = DG, is ∠DGF = ∠DFG? (yes/no):`,
+hint: `Proposition I.5 says in isosceles triangles, the base angles are equal.` },
+{ q: `So is ∠DFG greater than ∠EGF? (yes/no):`,
+hint: `In triangle DGF, the base angles at DGF and DFG are equal. Since ∠EDG is bigger than ∠EDF, the angle at F (∠DFG) ends up bigger than the angle at G (∠EGF).` },
+{ q: `Then does side EG > EF? (yes/no):`,
+hint: `Proposition I.19: in a triangle, the greater angle subtends the greater side.` },
+{ q: `But since EG = BC, do we conclude BC > EF? (yes/no):`,
+hint: `Hint: Since BC = EG, and we already know EG is bigger than EF, it follows that BC is also bigger than EF.` },
+
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations, when two triangles have two sides equal but one has the larger included angle, its base is also larger!
+    Q.E.F. (Quod Erat Faciendum)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

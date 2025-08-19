@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 26</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.26 - prove triangles equal by two angles and one side
+</h1>
+<p>If two triangles have two angles equal to two angles respectively, and one side equal to one side, namely, either the side adjoining the equal angles, or that opposite one of the equal angles, then the remaining sides equal the remaining sides and the remaining angle equals the remaining angle.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+{ q: `Welcome to Euclid's Elements I.26 chatbot!
+  
+Case 1:
+We are given two triangles ABC and DEF, with ∠ABC = ∠DEF, ∠BCA = ∠EFD, and side BC = EF. Do you agree? (yes/no):`,
+hint: `Two angles are equal to two angles, and the included side is also equal.` },
+{ q: `Now suppose AB ≠ DE. Is that possible? (yes/no):`,
+hint: `We test by assuming one side is greater.` },
+{ q: `If AB > DE, can we cut off BG from AB equal to DE? (yes/no):`,
+hint: `By Proposition I.3 we can cut off a segment from a greater line equal to a lesser.` },
+{ q: `Join GC. Possible? (yes/no):`,
+hint: `Postulate 1 allows joining any two points by a line.` },
+{ q: `Now, in △GBC and △DEF, are GB = DE, BC = EF, and ∠GBC = ∠DEF? (yes/no):`,
+hint: `Two sides and the included angle are equal.` },
+{ q: `Therefore, is GC = DF, and △GBC = △DEF by I.4? (yes/no):`,
+hint: `SAS congruence guarantees this.` },
+{ q: `But then ∠GCB = ∠DFE. And ∠DFE = ∠BCA (given). So ∠GCB = ∠BCA. Is this possible? (yes/no):`,
+hint: `No — a smaller angle equals a larger, which is absurd.` },
+{ q: `Thus AB is not greater than DE. Nor less. So must AB = DE? (yes/no):`,
+hint: `Only equality remains.` },
+{ q: `If AB = DE and BC = EF with ∠ABC = ∠DEF, then do triangles coincide by I.4? (yes/no):`,
+hint: `Yes, sides and included angle match.` },
+{ q: `Therefore AC = DF and ∠BAC = ∠EDF. Correct? (yes/no):`,
+hint: `All remaining parts match when triangles are equal.` },
+{ q: `Case 2:
+We are given two triangles ABC and DEF, with ∠ABC = ∠DEF, ∠BCA = ∠EFD, and side AB = DE. Do you agree? (yes/no):`,
+hint: `Two angles are equal to two angles, and a side opposite one equal angle is also equal.` },
+{ q: `Suppose BC ≠ EF. Is that possible? (yes/no):`,
+hint: `We test by assuming one is greater.` },
+{ q: `If BC > EF, can we cut off BH from BC equal to EF? (yes/no):`,
+hint: `By Proposition I.3 we can cut off a segment equal to another.` },
+{ q: `Join AH. Can we do that? (yes/no):`,
+hint: `Postulate 1 allows joining points.` },
+{ q: `Now in △ABH and △DEF, are AB = DE, BH = EF, and ∠ABH = ∠DEF? (yes/no):`,
+hint: `Two sides and included angle are equal.` },
+{ q: `Therefore, is AH = DF and △ABH = △DEF? (yes/no):`,
+hint: `By Proposition I.4, yes.` },
+{ q: `So ∠BHA = ∠EFD. But ∠EFD = ∠BCA (given). Does this make ∠BHA = ∠BCA? (yes/no):`,
+hint: `That would make an external angle equal an internal opposite angle, which is impossible (Prop. I.16).` },
+{ q: `Thus BC is not greater than EF, nor less. So is BC = EF? (yes/no):`,
+hint: `Only equality remains.` },
+{ q: `If AB = DE, BC = EF, and ∠ABC = ∠DEF, then do △ABC and △DEF coincide? (yes/no):`,
+hint: `By SAS, yes.` },
+{ q: `Therefore AC = DF and ∠BAC = ∠EDF. Correct? (yes/no):`,
+hint: `Remaining sides and angles of equal triangles are equal.` },
+{ q: `So, if two triangles have two angles equal and one side equal (ASA or AAS), are the triangles fully equal in their other sides and remaining angle? (yes/no):`,
+hint: `This is the angle-angle-side (AAS) and angle-side-angle (ASA) case of triangle congruence.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations, You have proven that if two triangles have two angles equal to two angles and one side equal to one side—either the side between the equal angles or the side opposite one equal angle—then the triangles are fully equal in their remaining sides and angle!
+    Q.E.D. (Quod Erat Demonstratum)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

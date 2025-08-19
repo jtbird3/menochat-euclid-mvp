@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 20</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.20 - prove sum of two sides greater than remaining side
+</h1>
+<p>In any triangle the sum of any two sides is greater than the remaining one.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Element's I.20 chatbot!
+  
+We are given a triangle ABC. Do you agree? (yes/no):`,
+hint: `A triangle is a figure with three sides and three angles. Here the vertices are A, B, and C.` },
+{ q: `Our goal is to show that any two sides of triangle ABC are greater than the remaining side. Does that make sense? (yes/no):`,
+hint: `For example, BA + AC > BC, AB + BC > AC, and BC + CA > AB.` },
+{ q: `Let's extend the side BA in a straight line beyond A to a point D. Is that possible? (yes/no):`,
+hint: `Postulate 2 allows us to produce any finite straight line in a straight line.` },
+{ q: `Now, make AD equal to AC. Is this allowed? (yes/no):`,
+hint: `Proposition I.3 allows cutting off or constructing a line equal to another given line.` },
+{ q: `Join the points C and D with a straight line. Can we do that? (yes/no):`,
+hint: `Postulate 1 allows us to draw a straight line from any point to any point.` },
+{ q: `Since DA = AC, are the angles ADC and ACD also equal? (yes/no):`,
+hint: `In an isosceles triangle, the angles opposite equal sides are equal (Proposition I.5).` },
+{ q: `Now, compare angle BCD and angle ADC. Is ∠BCD greater than ∠ADC? (yes/no):`,
+hint: `Exterior angle ∠BCD of triangle ADC is greater than interior opposite angle ∠ADC (Proposition I.16).` },
+{ q: `If ∠BCD > ∠BDC, is side DB greater than side BC? (yes/no):`,
+hint: `In any triangle, the greater angle is opposite the greater side (Proposition I.19).` },
+{ q: `But since DA = AC, can we say BA + AC = BD? (yes/no):`,
+hint: `BA + AC = BA + AD, because AD = AC.` },
+{ q: `And since BD > BC, does it follow that BA + AC > BC? (yes/no):`,
+hint: `Replace BD with BA + AC, then compare with BC.` },
+{ q: `By the same reasoning, can we also show AB + BC > AC, and BC + CA > AB? (yes/no):`,
+hint: `Repeat the same construction on the other sides.` },
+{ q: `Therefore, in any triangle, do any two sides taken together exceed the remaining one? (yes/no):`,
+hint: `Yes, we have shown it for all three pairs of sides.` },
+
+
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! You have proven that any triangle, two sides together are greater than the remaining side. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

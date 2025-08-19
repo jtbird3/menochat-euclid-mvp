@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 7</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.7 - prove equal lines cannot be constructed from ends on same side
+</h1>
+<p>Given two straight lines constructed from the ends of a straight line and meeting in a point, there cannot be constructed from the ends of the same straight line, and on the same side of it, two other straight lines meeting in another point and equal to the former two respectively, namely each equal to that from the same end.
+</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.7 chatbot!
+   
+We are given a straight line AB, and from its endpoints two lines AC and CB are drawn meeting at C. Do you agree? (yes/no):`,
+    hint: `Think of triangle ABC with vertex C on one side of line AB.` },
+  { q: `Now suppose we try to construct another pair of lines AD and DB, with AD = AC and DB = CB, meeting at a different point D on the same side of AB. Is this clear? (yes/no):`,
+    hint: `We are imagining another triangle ADB, with the same base AB, and sides equal to AC and CB, but at a different vertex D.` },
+  { q: `So, do we have AC = AD, both starting from A? (yes/no):`,
+    hint: `That is part of the assumption: AD is made equal to AC.` },
+  { q: `And also CB = DB, both starting from B? (yes/no):`,
+    hint: `That is also assumed: DB is made equal to CB.` },
+  { q: `Our goal is to prove that such a construction is impossible. Does that make sense? (yes/no):`,
+    hint: `We want to show that having two different meeting points C and D with equal sides leads to a contradiction.` },
+  { q: `Let us join the points C and D with the line CD. Can we do this? (yes/no):`,
+    hint: `Postulate 1 allows a straight line to be drawn from any point to any point.` },
+  { q: `Now, since AC = AD, do you agree that ∠ACD = ∠ADC? (yes/no):`,
+    hint: `Proposition I.5: in an isosceles triangle, the base angles are equal.` },
+  { q: `But then, is ∠ADC greater than ∠DCB? (yes/no):`,
+    hint: `Yes, because ∠ADC is an external angle of triangle DCB, so it is greater than the internal opposite ∠DCB (Common Notion 5).` },
+  { q: `Therefore, is ∠CDB much greater than ∠DCB? (yes/no):`,
+    hint: `∠CDB contains ∠ADC, so it must also be greater.` },
+  { q: `Yet since CB = DB, do we also have ∠CDB = ∠DCB? (yes/no):`,
+    hint: `Again, Proposition I.5: equal sides give equal base angles.` },
+  { q: `But now we have ∠CDB = ∠DCB and also ∠CDB > ∠DCB. Contradiction? (yes/no):`,
+    hint: `A thing cannot be both equal and greater at the same time — contradiction.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Therefore, it is impossible for two different points C and D to exist such that AC = AD and CB = DB on the same side of base AB. Well done. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

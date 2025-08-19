@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 21</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.21 - prove sum of lines from ends less than other two sides and included angle greater than contained angle
+</h1>
+<p>If from the ends of one of the sides of a triangle two straight lines are constructed meeting within the triangle, then the sum of the straight lines so constructed is less than the sum of the remaining two sides of the triangle, but the constructed straight lines contain a greater angle than the angle contained by the remaining two sides.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+{ q: `Welcome to Euclid's Elements I.21 Chatbot!
+  
+We are given a triangle ABC, with side BC. Do you agree? (yes/no):`,
+hint: `Think of △ABC, with BC as the base.` },
+{ q: `Now, from points B and C, let us draw two internal straight lines BD and DC inside the triangle. Okay? (yes/no):`,
+hint: `BD is drawn from B into the triangle, DC from C into the triangle, meeting at D.` },
+{ q: `Our claim: BD + DC is less than BA + AC, but ∠BDC is greater than ∠BAC. Does that make sense? (yes/no):`,
+hint: `We are comparing the combined lines inside with the two outer sides, and also the angles.` },
+{ q: `Let BD be extended through to a point E. Acceptable? (yes/no):`,
+hint: `Postulate 2 allows us to extend any finite line.` },
+{ q: `Now, in triangle ABE, are the two sides AB and AE greater than BE? (yes/no):`,
+hint: `By Proposition I.20, in any triangle, two sides are greater than the remaining one.` },
+{ q: `If we now add EC to both, is BA + AC greater than BE + EC? (yes/no):`,
+hint: `Adding the same length EC to both sides of the inequality preserves it.` },
+{ q: `Next, in triangle CED, are CE + ED greater than CD? (yes/no):`,
+hint: `Again, by Proposition I.20, two sides of a triangle are greater than the third.` },
+{ q: `If we add DB to both, do we get CE + EB greater than CD + DB? (yes/no):`,
+hint: `Adding the same segment DB preserves inequality.` },
+{ q: `But earlier, we showed BA + AC > BE + EC. Combine this with CE + EB > CD + DB. Does it follow that BA + AC is much greater than BD + DC? (yes/no):`,
+hint: `Putting the inequalities together shows the outer two sides exceed the inner two.` },
+{ q: `Now, consider the angles: in triangle CDE, is external ∠BDC greater than internal ∠CED? (yes/no):`,
+hint: `Proposition I.16 states that an external angle of a triangle is greater than the internal opposite angle.` },
+{ q: `Likewise, in triangle ABE, is external ∠CEB greater than ∠BAC? (yes/no):`,
+hint: `By the same reasoning (Prop. I.16), the external angle exceeds the opposite internal angle.` },
+{ q: `But we already showed ∠BDC > ∠CEB. Then, is ∠BDC much greater than ∠BAC? (yes/no):`,
+hint: `If ∠BDC > ∠CEB and ∠CEB > ∠BAC, then ∠BDC > ∠BAC.` },
+{ q: `Therefore, BD + DC < BA + AC, but ∠BDC > ∠BAC. Have we proved the claim? (yes/no):`,
+hint: `Yes — the inner lines are shorter, but they enclose a greater angle.` },
+
+
+
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations, You have shown that when two straight lines are drawn inside a triangle from the ends of one side, these lines together are shorter than the other two sides of the triangle, but they enclose a larger angle! 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

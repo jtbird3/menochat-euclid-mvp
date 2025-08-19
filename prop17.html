@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 17</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.17 - prove sum of two angles less than two right angles
+</h1>
+<p>In any triangle the sum of any two angles is less than two right angles.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.17 chatbot!
+   
+We are given a triangle ABC. Do you agree? (yes/no):`,
+    hint: `A triangle has three sides and three angles; here the angles are ∠A, ∠B, and ∠C.` },
+  { q: `Our goal is to show that any two angles of triangle ABC are less than two right angles. Does that make sense? (yes/no):`,
+    hint: `Two right angles equal 180°. We want to prove that any two angles of the triangle together are always less than 180°.` },
+  { q: `Now, let's produce side BC in a straight line to a new point D. Can we do that? (yes/no):`,
+    hint: `By Postulate 2, any finite straight line can be extended further in a straight line.` },
+  { q: `Is ∠ACD an exterior angle of triangle ABC? (yes/no):`,
+    hint: `∠ACD lies outside the triangle at vertex C, formed by extending side BC.` },
+  { q: `From Proposition I.16, is ∠ACD greater than the interior opposite angle ∠ABC? (yes/no):`,
+    hint: `Yes, the exterior angle is always greater than the opposite interior angle.` },
+  { q: `If we add ∠ACB to both sides, do we get (∠ACD + ∠ACB) > (∠ABC + ∠ACB)? (yes/no):`,
+    hint: `Adding equals to unequals gives unequals (Common Notion 4).` },
+  { q: `But from Proposition I.13, do ∠ACD and ∠ACB together equal two right angles? (yes/no):`,
+    hint: `A straight line makes two right angles with the adjacent angles on one side.` },
+  { q: `So, since ∠ACD + ∠ACB = two right angles, can we conclude that ∠ABC + ∠ACB are less than two right angles? (yes/no):`,
+    hint: `Yes, because a smaller sum is less than 180°.` },
+  { q: `By the same reasoning, can we also show that ∠BAC + ∠ACB < two right angles, and ∠CAB + ∠ABC < two right angles? (yes/no):`,
+    hint: `Repeat the same steps by extending other sides.` },
+  { q: `Therefore, in any triangle, are any two angles always less than two right angles? (yes/no):`,
+    hint: `Yes, this is the general conclusion.` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Congratulations! We have shown that in any triangle, any two angles together are less than two right angles. 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>

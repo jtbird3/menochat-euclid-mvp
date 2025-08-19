@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Book I - Proposition 1</title>
+  <title>Book I - Proposition 18</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -14,15 +14,15 @@
       margin: auto;
     }
     h1 { font-size: 24px; margin-bottom: 10px; }
-    #chat {
+     #chat {
     border: 1px solid #ccc;
     padding: 10px;
     min-height: 200px;
     white-space: pre-wrap;
-    display: flex;          /* stack messages vertically */
+    display: flex;          /* stack messages */
     flex-direction: column; 
     gap: 10px;              /* space between bot/user lines */
-  }
+    }
     #inputArea {
       margin-top: 10px;
     }
@@ -36,10 +36,9 @@
 </head>
 <body>
 
-<h1>I.1 - equilateral triangle</h1>
-<p>To construct an equilateral triangle on a given finite straight line.<br><br>
-
-Type your answer and press Enter.</p>
+<h1>I.18 - prove angle opposite greater side is greater
+</h1>
+<p>In any triangle the angle opposite the greater side is greater.</p>
 
 <div id="chat"></div>
 
@@ -49,24 +48,22 @@ Type your answer and press Enter.</p>
 
 <script>
 const steps = [
-  { q: `Welcome to Euclid's Elements I.1 chatbot.
-
-You are given a finite straight line, AB. Do you agree? (yes/no):`,
-    hint: `A finite straight line is a line with two endpoints.` },
-  { q: `The goal is to construct an equilateral triangle on this line AB. Does that make sense? (yes/no):`,
-    hint: `An equilateral triangle has all three sides of equal length.` },
-  { q: `First, draw a circle with center A and radius AB. Possible? (yes/no):`,
-    hint: `Postulate 3 of Euclid's Elements allows us to draw a circle with any center and radius.` },
-  { q: `Next, draw another circle with center B and radius BA. Possible? (yes/no):`,
-    hint: `Again, Postulate 3 allows this.` },
-  { q: `The two circles intersect at two points. Let's choose one of these intersection points and call it C. Do you see that this point C exists? (yes/no):`,
-    hint: `Since the circles are drawn with radius AB and centered at A and B, they must cross each other.` },
-  { q: `Is the line segment AC equal in length to the line segment AB? (yes/no):`,
-    hint: `AC is a radius of the first circle (centered at A), and AB is also a radius of that same circle.` },
-  { q: `Is the line segment BC equal in length to the line segment AB? (yes/no):`,
-    hint: `BC is a radius of the second circle (centered at B), and AB is the radius of that circle.` },
-  { q: `Since AC = AB and BC = AB, can we conclude that AC = BC = AB? (yes/no)`,
-    hint: `This is based on Common Notion 1: Things which are equal to the same thing are also equal to one another.` }
+  { q: `Welcome to Euclid's Elements I.18 chatbot!
+   
+We are given a triangle ABC, where side AC is greater than side AB. Do you agree? (yes/no):`,
+    hint: `“Greater side” means longer side. Here AC is longer than AB.` },
+  { q: `Our goal is to show that angle ABC is greater than angle ACB. Does that make sense? (yes/no):`,
+    hint: `The larger side of a triangle lies opposite the larger angle.` },
+  { q: `First, let us cut off from AC a piece equal to AB, marking point D on AC so that AD = AB. Can we do this? (yes/no):`,
+    hint: `By Proposition I.3, we can cut off a segment from a longer line equal to a given shorter line.` },
+  { q: `Now, join BD. Possible? (yes/no):`,
+    hint: `Postulate 1 allows a straight line to be drawn from any point to any point.` },
+  { q: `Consider angle ADB, which is an exterior angle to triangle BCD. Is angle ADB greater than the interior opposite angle ACB? (yes/no):`,
+    hint: `Proposition I.16: an exterior angle is greater than either interior opposite angle.` },
+  { q: `But is angle ADB equal to angle ABD? (yes/no):`,
+    hint: `Since ABD = ADB, and ADB > ACB, it follows that ABD > ACB.` },
+  { q: `Finally, since angle ABC is greater than ABD, can we conclude angle ABC is also greater than ACB? (yes/no):`,
+    hint: `If a whole is greater than a part, then ABC > ABD, and ABD > ACB, so ABC > ACB.` },
 ];
 
 let currentStep = 0;
@@ -85,11 +82,12 @@ function showStep() {
   if (currentStep < steps.length) {
     addMessage(steps[currentStep].q, 'bot');
   } else {
-    addMessage(`Congratulations! You have constructed an equilateral triangle ABC on the line segment AB.
-Q.E.F. (Quod Erat Faciendum - which was to be done)`, 'bot');
+    addMessage(`Therefore, in any triangle, the greater side subtends the greater angle. Good job! 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
     inputField.disabled = true;
   }
 }
+
 
 function processAnswer(answer) {
   addMessage(answer, 'user');

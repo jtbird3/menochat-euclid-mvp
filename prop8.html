@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book I - Proposition 8</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #ffffff;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+     #chat {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    display: flex;          /* stack messages */
+    flex-direction: column; 
+    gap: 10px;              /* space between bot/user lines */
+    }
+    #inputArea {
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>I.8 - prove included angles equal by two sides and base (SSS)
+</h1>
+<p>If two triangles have the two sides equal to two sides respectively, and also have the base equal to the base, then they also have the angles equal which are contained by the equal straight lines.</p>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input id="userInput" type="text" placeholder="Type 'yes' or 'no'..." autofocus>
+</div>
+
+<script>
+const steps = [
+  { q: `Welcome to Euclid's Elements I.8 chatbot!
+   
+We are given two triangles, ABC and DEF. Do you agree? (yes/no):`,
+    hint: `Think of ΔABC and ΔDEF as two triangles we will compare.` },
+  { q: `The side AB equals the side DE. (yes/no):`,
+    hint: `First corresponding side pair is equal: AB = DE.` },
+  { q: `The side AC equals the side DF. (yes/no):`,
+    hint: `Second corresponding side pair is equal: AC = DF.` },
+  { q: `The base BC equals the base EF. (yes/no):`,
+    hint: `Third pair of corresponding sides is equal: BC = EF.` },
+  { q: `Our goal is to show that ∠BAC = ∠EDF. Does that make sense? (yes/no):`,
+    hint: `We want to prove the contained angles are equal.` },
+  { q: `Now, imagine placing triangle ABC onto triangle DEF, so that base BC coincides with base EF. Reasonable? (yes/no):`,
+    hint: `Since BC = EF, the bases can be made to overlap.` },
+  { q: `If BC coincides with EF, will point B coincide with point E, and point C with point F? (yes/no):`,
+    hint: `Equal lengths mean the endpoints match up when bases overlap.` },
+  { q: `With B on E and C on F, do AB and AC also coincide with DE and DF? (yes/no):`,
+    hint: `If the bases coincide, the equal sides from A must also coincide with the equal sides from D.` },
+  { q: `Could AB and AC fail to coincide with DE and DF while still meeting at the same endpoints? (yes/no):`,
+    hint: `Proposition I.7 shows this is impossible—two equal lines cannot be constructed from the same base to different points.` },
+  { q: `Therefore, if AB = DE, AC = DF, and BC = EF, then angle BAC coincides with angle EDF. Are they equal? (yes/no):`,
+    hint: `Coinciding angles are equal (Common Notion 4).` },
+];
+
+let currentStep = 0;
+const chatDiv = document.getElementById('chat');
+const inputField = document.getElementById('userInput');
+
+function addMessage(text, role = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatDiv.appendChild(div);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+function showStep() {
+  if (currentStep < steps.length) {
+    addMessage(steps[currentStep].q, 'bot');
+  } else {
+    addMessage(`Thus, if two triangles have two corresponding sides equal and their bases equal, then the contained angles are also equal. Congratulations! 
+Q.E.D. (Quod Erat Demonstrandum — which was to be demonstrated)`, 'bot');
+    inputField.disabled = true;
+  }
+}
+
+
+function processAnswer(answer) {
+  addMessage(answer, 'user');
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    currentStep++;
+    showStep();
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    addMessage(`Hint: ${steps[currentStep].hint}`, 'bot');
+  } else {
+    addMessage(`Please answer 'yes' or 'no'.`, 'bot');
+  }
+}
+
+inputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const answer = inputField.value.trim();
+    if (answer) {
+      processAnswer(answer);
+      inputField.value = '';
+    }
+  }
+});
+
+// Start conversation
+showStep();
+</script>
+
+</body>
+</html>
